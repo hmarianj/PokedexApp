@@ -24,22 +24,33 @@ struct HomeView: View {
         GridItem(.adaptive(minimum: 150))
     ]
     
+    @State var searchText: String = ""
+    
     var body: some View {
         NavigationView {
             ScrollView {
+                SearchBox(searchText: .constant(""))
+                    .padding(.bottom)
                 LazyVGrid(columns: adaptiveColumn, spacing: 20) {
                     ForEach(items, id: \.0) { item in
-                        NavigationLink(destination: DetailsView(title: item.0, description: item.1)) {
-                            CardView()
+                        NavigationLink(
+                            destination: DetailsView(
+                                title: item.0,
+                                description: item.1,
+                                number: "203" // TODO: parametrizar
+                            )
+                        ) {
+                            CardView(pokemonType: "pokemon-agua")
                         }
                     }
                 }
             }
+            .padding()
+            .navigationTitle("Pokedex")
         }
     }
 }
 
 #Preview {
     HomeView()
-        .padding()
 }
