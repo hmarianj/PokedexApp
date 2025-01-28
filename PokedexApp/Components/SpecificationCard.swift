@@ -16,14 +16,15 @@ struct SpecificationCard: View {
     
     var body: some View {
         VStack {
-            titleSection
+            categorySection
             descriptionSection
         }
     }
 }
 
 private extension SpecificationCard {
-    var titleSection: some View {
+    
+    var categorySection: some View {
         HStack {
             Image(imageName)
                 .resizable()

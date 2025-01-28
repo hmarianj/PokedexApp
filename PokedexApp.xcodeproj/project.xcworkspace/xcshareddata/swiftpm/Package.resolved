@@ -1,0 +1,15 @@
+{
+  "originHash" : "34b4ae89865ef6c1f6aad28c6d8eb9c1c58502e0b324dbd95014a3a622f4e9b4",
+  "pins" : [
+    {
+      "identity" : "corenetworking",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mdb1/CoreNetworking.git",
+      "state" : {
+        "revision" : "0c45531109c64043fa91ef41929a39b071e7784e",
+        "version" : "0.1.1"
+      }
+    }
+  ],
+  "version" : 3
+}

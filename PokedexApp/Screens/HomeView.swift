@@ -9,16 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     
-    let items = [
-        ("Card 1", "This is the first card."),
-        ("Card 2", "This is the second card."),
-        ("Card 3", "This is the third card."),
-        ("Card 4", "This is the third card."),
-        ("Card 5", "This is the first card."),
-        ("Card 6", "This is the second card."),
-        ("Card 7", "This is the third card."),
-        ("Card 8", "This is the third card.")
-    ]
+    @StateObject private var viewModel: ViewModel = ViewModel()
     
     private let adaptiveColumn = [
         GridItem(.adaptive(minimum: 150))
@@ -27,26 +18,48 @@ struct HomeView: View {
     @State var searchText: String = ""
     
     var body: some View {
-        NavigationView {
+        VStack {
+            if viewModel.isLoading {
+                ProgressView()
+            } else if viewModel.displayError {
+                Text("Create screen error") // TODO: create an Error View
+            } else if !viewModel.pokemons.isEmpty {
+                contentView(viewModel.pokemons)
+            } else {
+                Text("Initial State")
+            }
+        }
+        .task {
+            await viewModel.getUser()
+        }
+    }
+}
+
+private extension HomeView {
+    func contentView(_ pokemons: [Pokemon]) -> some View {
+        NavigationStack {
             ScrollView {
                 SearchBox(searchText: .constant(""))
                     .padding(.bottom)
                 LazyVGrid(columns: adaptiveColumn, spacing: 20) {
-                    ForEach(items, id: \.0) { item in
+                    ForEach(viewModel.pokemons, id: \.name) { item in
                         NavigationLink(
                             destination: DetailsView(
-                                title: item.0,
-                                description: item.1,
-                                number: "203" // TODO: parametrizar
+                                id: item.id,
+                                title: item.name, // TODO: pasa valor real
+                                description: item.name, // TODO: pasa valor real
+                                number: item.name,
+                                imageUrl: item.imageUrl // TODO: parametrizar
                             )
                         ) {
-                            CardView(pokemonType: "pokemon-agua")
+                            CardView(imageUrl: item.imageUrl, name: item.name)
                         }
                     }
+                    .navigationTitle("Pokedex")
                 }
             }
+            .scrollIndicators(.hidden)
             .padding()
-            .navigationTitle("Pokedex")
         }
     }
 }
