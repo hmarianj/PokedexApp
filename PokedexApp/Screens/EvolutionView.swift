@@ -22,7 +22,7 @@ struct EvolutionView: View {
                         OvalCard(
                             titleName: pokemon.name,
                             imageUrl: pokemon.imageUrl,
-                            numberID: "N \(pokemon.id)"
+                            numberID: pokemon.id
                         )
                         if pokemons.last?.id != pokemon.id {
                             arrowLevel

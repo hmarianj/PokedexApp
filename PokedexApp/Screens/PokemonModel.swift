@@ -41,10 +41,26 @@ struct PokemonSpecies: Codable {
     let evolutionChain: EvolutionChain
     
     struct ApiColor: Codable {
-        let name: String
+        let name: BackgroundColor
     }
     
     struct EvolutionChain: Codable {
         let url: String
     }
 }
+
+struct PokemonDetails: Codable {
+    let types: [Types]
+    let height: Int
+    let weight: Int
+    
+    struct Types: Codable {
+        let type: TypeDetail
+    }
+    
+    struct TypeDetail: Codable {
+        let name: String
+    }
+}
+
+

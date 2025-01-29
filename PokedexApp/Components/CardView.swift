@@ -16,8 +16,8 @@ struct CardView: View {
         HStack {
             VStack(alignment: .leading) {
                 titleView
-                TagView(content: TagView.Content(description: "Water"), style: TagView.Style.standar)
-                TagView(content: TagView.Content(description: "Water"), style: TagView.Style.standar)
+                TagView(content: TagView.Content(type: "Water"), style: TagView.Style.standar)
+                TagView(content: TagView.Content(type: "Water"), style: TagView.Style.standar)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

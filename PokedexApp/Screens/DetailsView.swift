@@ -21,7 +21,6 @@ struct DetailsView: View {
             backgroundImage
             VStack {
                 titleSection
-                
                 VStack(alignment: .leading, spacing: 24) {
                     numberIDSection
                     tagViewSection
@@ -39,7 +38,8 @@ struct DetailsView: View {
         }
         .ignoresSafeArea()
         .task {
-            await viewModel.loadPokemonData(id: id)
+            await viewModel.loadPokemonSpeciesData(id: id)
+            await viewModel.loadPokemonDetails(id: id)
         }
     }
 }
@@ -63,12 +63,21 @@ private extension DetailsView {
                 Circle()
                     .frame(width: 498, height: 498)
                     .offset(x: 0, y: -200)
-                    .foregroundStyle(.cyan.opacity(0.4))
+                    .foregroundStyle(pillBackgroundColor)
                     .clipped()
                 Image("aqua-icon")
                     .frame(width: 180, height: 180)
                     .offset(y: -60)
             }
+        }
+    }
+    
+    var pillBackgroundColor: Color {
+        // si tengo pokemon species -> pokemon.apiColor.name.bgColor
+        if let pokemonSpecies = viewModel.pokemonSpecies {
+            return pokemonSpecies.color.name.bgColor
+        } else {
+            return .gray
         }
     }
     
@@ -79,7 +88,7 @@ private extension DetailsView {
     }
     
     var numberIDSection: some View {
-        Text("N\(number)")
+        Text("N\(id)")
             .font(.headline)
             .foregroundStyle(.gray)
     }
@@ -90,27 +99,43 @@ private extension DetailsView {
             .foregroundStyle(.black.opacity(0.8))
     }
     
+    @ViewBuilder
     var tagViewSection: some View {
-        // TODO: hacer forEach por cada tag view que contenga
-        TagView(
-            content: TagView.Content(description: "Water"),
-            style: TagView.Style.standar
-        )
+        if let pokemonDetails = viewModel.pokemonDetails {
+            HStack {
+                ForEach(pokemonDetails.types, id: \.type.name) { type in
+                    TagView(
+                        content: TagView.Content(type: type.type.name.capitalized),
+                        style: TagView.Style.standar
+                    )
+                }
+            }
+        } else {
+            EmptyView()
+        }
     }
     
     var specificationSection: some View {
-        VStack(spacing: 24) {
-            Text("Characteristics")
-                .font(.system(.title2, weight: .bold))
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.vertical, 6)
-            HStack(spacing: 20) {
-                SpecificationCard(imageName: "weigth-icon", title: "Weigth", value: "14,5 " , metric: "kg")
-                SpecificationCard(imageName: "heigth-icon", title: "Heigth", value: "2,5 " , metric: "m")
-            }
-            HStack(spacing: 20) {
-                SpecificationCard(imageName: "category-icon", title: "Category", value: "Seed" , metric: "")
-                SpecificationCard(imageName: "pokeball-icon", title: "Ability", value: "Overgrow" , metric: "")
+            VStack(spacing: 24) {
+                if let pokemonDetails = viewModel.pokemonDetails {
+                Text("Characteristics")
+                    .font(.system(.title2, weight: .bold))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, 6)
+                HStack(spacing: 20) {
+                    SpecificationCard(
+                        imageName: "weigth-icon",
+                        title: "Weigth",
+                        value:  formatValue(pokemonDetails.weight),
+                        metric: "kg"
+                    )
+                    SpecificationCard(
+                        imageName: "heigth-icon",
+                        title: "Heigth",
+                        value: formatValue(pokemonDetails.height),
+                        metric: "m"
+                    )
+                }
             }
         }
     }
@@ -136,10 +161,17 @@ private extension DetailsView {
 }
 
 extension DetailsView {
+    
+    func formatValue(_ value: Int) -> String {
+        let formattedValue = Double(value) / 10.0
+        return String(format: "%.1f", formattedValue)
+    }
+    
     @MainActor
     class ViewModel: ObservableObject {
         @Published var isLoading: Bool = false
         @Published var pokemonSpecies: PokemonSpecies? = nil
+        @Published var pokemonDetails: PokemonDetails? = nil
         @Published var evolutionPokemons: [Pokemon] = []
         
         init() {
@@ -150,7 +182,7 @@ extension DetailsView {
         
         // TODO: Variables para pokemon species (loading/error?)
         
-        func loadPokemonData(id: Int) async {
+        func loadPokemonSpeciesData(id: Int) async {
             isLoading = true
             do {
                 let response = try await HTTPClient.shared.execute(
@@ -168,9 +200,26 @@ extension DetailsView {
 //                displayError = true
             }
         }
+
+        func loadPokemonDetails(id: Int) async {
+            isLoading = true
+            do {
+                let response = try await HTTPClient.shared.execute(
+                    Request(
+                        urlString: "https://pokeapi.co/api/v2/pokemon/\(id)",
+                        method: .get([])
+                    ),
+                    responseType: PokemonDetails.self
+                )
+                self.pokemonDetails = response
+            } catch {
+                isLoading = false
+                // TODO: Error
+//                displayError = true
+            }
+        }
         
         private func loadEvolutions(url: String) async {
-            
             isLoading = true
             // Call evolution api
             do {
@@ -219,5 +268,44 @@ extension Evolution.EvolvesTo {
             result.append(contentsOf: evolution.allEvolvedPokemons())
         }
         return result
+    }
+}
+
+enum BackgroundColor: String, Codable {
+    case black
+    case blue
+    case brown
+    case gray
+    case green
+    case pink
+    case purple
+    case red
+    case white
+    case yellow
+    
+    // TODO: crear paleta de colores
+    var bgColor: Color {
+        switch self {
+        case .black:
+            Color.black
+        case .blue:
+            Color.blue
+        case .brown:
+            Color.brown
+        case .gray:
+            Color.gray
+        case .green:
+            Color.green
+        case .pink:
+            Color.pink
+        case .purple:
+            Color.purple
+        case .red:
+            Color.red
+        case .white:
+            Color.white
+        case .yellow:
+            Color.yellow
+        }
     }
 }

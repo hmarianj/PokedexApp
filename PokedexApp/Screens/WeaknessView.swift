@@ -12,12 +12,12 @@ struct WeaknessView: View {
         VStack {
             titleSection
                 HStack(spacing: 20) {
-                    TagView(content: TagView.Content(description: "Water"), style: TagView.Style.category)
-                    TagView(content: TagView.Content(description: "Water"), style: TagView.Style.category)
+                    TagView(content: TagView.Content(type: "Water"), style: TagView.Style.category)
+                    TagView(content: TagView.Content(type: "Water"), style: TagView.Style.category)
                 }
             HStack(spacing: 20) {
-                TagView(content: TagView.Content(description: "Water"), style: TagView.Style.category)
-                TagView(content: TagView.Content(description: "Water"), style: TagView.Style.category)
+                TagView(content: TagView.Content(type: "Water"), style: TagView.Style.category)
+                TagView(content: TagView.Content(type: "Water"), style: TagView.Style.category)
             }
             }
         }

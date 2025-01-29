@@ -20,7 +20,7 @@ struct TagView: View {
                 .padding(style.iconPadding)
                 .background(.white)
                 .cornerRadius(24)
-            Text(content.description)
+            Text(content.type)
                 .font(style.fontSize)
                 .foregroundStyle(.white)
         }
@@ -35,7 +35,7 @@ struct TagView: View {
 
 extension TagView {
     struct Content {
-        let description: String
+        let type: String
     }
     
     struct Style {
@@ -75,14 +75,14 @@ extension TagView {
 #Preview {
     VStack {
         TagView(
-            content: TagView.Content(
-                description: "Water"
+            content: TagView
+                .Content(type: "Water"
             ),
             style: TagView.Style.standar
         )
         TagView(
-            content: TagView.Content(
-                description: "Water"
+            content: TagView
+                .Content(type: "Water"
             ),
             style: TagView.Style.category
         )

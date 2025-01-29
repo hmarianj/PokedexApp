@@ -11,7 +11,7 @@ struct OvalCard: View {
     
     let titleName: String
     let imageUrl: String
-    let numberID: String
+    let numberID: Int
     
     var body: some View {
         HStack {
@@ -60,8 +60,8 @@ private extension OvalCard {
     
     var tagViewSection: some View {
         HStack {
-            TagView(content: TagView.Content(description: ""), style: TagView.Style.standar)
-            TagView(content: TagView.Content(description: ""), style: TagView.Style.standar)
+            TagView(content: TagView.Content(type: ""), style: TagView.Style.standar)
+            TagView(content: TagView.Content(type: ""), style: TagView.Style.standar)
         }
     }
 }
@@ -70,7 +70,7 @@ private extension OvalCard {
     OvalCard(
         titleName: "Squirtle",
         imageUrl: "pokemon-agua",
-        numberID: "007"
+        numberID: 007
     )
     .padding()
 }
