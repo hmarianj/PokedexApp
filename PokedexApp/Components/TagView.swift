@@ -22,7 +22,7 @@ struct TagView: View {
                 .padding(style.iconPadding)
                 .background(.white)
                 .cornerRadius(24)
-            Text(content.type)
+            Text(content.type.capitalized)
                 .font(style.fontSize)
                 .foregroundStyle(.white)
         }

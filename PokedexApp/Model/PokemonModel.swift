@@ -22,29 +22,11 @@ struct Pokemon: Codable {
     }
 }
 
-struct Evolution: Codable {
-    let chain: Chain
-    
-    struct Chain: Codable {
-        let species: Pokemon
-        let evolvesTo: [EvolvesTo]
-    }
-    
-    struct EvolvesTo: Codable {
-        let evolvesTo: [EvolvesTo]
-        let species: Pokemon
-    }
-}
 
 struct PokemonSpecies: Codable {
-    let color: ApiColor
     let evolutionChain: EvolutionChain
     let genderRate: Int
     let flavorTextEntries: [FlavorTextEntries]
-    
-    struct ApiColor: Codable {
-        let name: BackgroundColor
-    }
     
     struct EvolutionChain: Codable {
         let url: String

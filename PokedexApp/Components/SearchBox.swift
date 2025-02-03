@@ -19,7 +19,7 @@ struct SearchBox: View {
             TextField(
                 "",
                 text: $searchText,
-                prompt: Text("Search pokemon, ability...")
+                prompt: Text("Search pokemon")
             )
             .font(.body)
             .foregroundStyle(searchText.isEmpty ? .gray : .black)

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct EvolutionView: View {
     
+    // The id of the detail view
+    let currentId: Int
     let pokemons: [Pokemon]
     let bgColor: Color
 
@@ -19,12 +21,7 @@ struct EvolutionView: View {
                 titleSection
                 VStack {
                     ForEach(pokemons, id: \.id) { pokemon in
-                        OvalCard(
-                            titleName: pokemon.name,
-                            imageUrl: pokemon.imageUrl,
-                            numberID: pokemon.id,
-                            bgColor: bgColor
-                        )
+                        card(for: pokemon)
                         if pokemons.last?.id != pokemon.id {
                             arrowLevel
                         }
@@ -43,6 +40,32 @@ struct EvolutionView: View {
 
 private extension EvolutionView {
     
+    @ViewBuilder
+    func card(for pokemon: Pokemon) -> some View {
+        if pokemon.id == currentId {
+            ovalCard(for: pokemon)
+        } else {
+            NavigationLink {
+                DetailsView(
+                    id: pokemon.id,
+                    title: pokemon.name,
+                    imageUrl: pokemon.imageUrl
+                )
+            } label: {
+                ovalCard(for: pokemon)
+            }
+        }
+    }
+    
+    func ovalCard(for pokemon: Pokemon) -> some View {
+        OvalCard(
+            titleName: pokemon.name,
+            imageUrl: pokemon.imageUrl,
+            id: pokemon.id,
+            bgColor: bgColor
+        )
+    }
+    
     var titleSection: some View {
         Text("Evolution")
             .font(.system(.title2, weight: .bold))
@@ -55,7 +78,7 @@ private extension EvolutionView {
                 Spacer()
                 Image(systemName: "arrowshape.down.fill")
                     .font(.title2)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(bgColor)
                 Spacer()
             }
             .padding(12)
@@ -63,9 +86,13 @@ private extension EvolutionView {
 }
 
 #Preview {
-    EvolutionView(pokemons: [
-        .init(name: "Metapod", url: "https://pokeapi.co/api/v2/pokemon-species/11/"),
-        .init(name: "Butterfree", url: "https://pokeapi.co/api/v2/pokemon-species/12/")
-    ], bgColor: Color.bgBlue)
+    EvolutionView(
+        currentId: 11,
+        pokemons: [
+            .init(name: "Metapod", url: "https://pokeapi.co/api/v2/pokemon-species/11/"),
+            .init(name: "Butterfree", url: "https://pokeapi.co/api/v2/pokemon-species/12/")
+        ],
+        bgColor: Color.bgBlue
+    )
         .padding()
 }

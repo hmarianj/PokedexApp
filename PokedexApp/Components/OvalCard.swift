@@ -11,7 +11,7 @@ struct OvalCard: View {
     
     let titleName: String
     let imageUrl: String
-    let numberID: Int
+    let id: Int
     let bgColor: Color
     
     var body: some View {
@@ -53,8 +53,14 @@ private extension OvalCard {
         VStack(alignment: .leading, spacing: 8) {
             Text(titleName.capitalized)
                 .font(.system(.title3, weight: .semibold))
-            Text("N\(numberID)")
-                .font(.caption)
+                .foregroundStyle(.bgBlack)
+            Text("Nº\(String(format: "%03d", id))")
+                .font(.system(.caption2, weight: .semibold))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 4)
+                .background(bgColor)
+                .cornerRadius(16)
         }
     }
 }
@@ -63,7 +69,7 @@ private extension OvalCard {
     OvalCard(
         titleName: "Squirtle",
         imageUrl: "pokemon-agua",
-        numberID: 007,
+        id: 007,
         bgColor: Color.bgBlue
     )
     .padding()

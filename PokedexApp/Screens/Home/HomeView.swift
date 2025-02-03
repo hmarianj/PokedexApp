@@ -22,7 +22,11 @@ struct HomeView: View {
             if viewModel.isLoading {
                 ProgressView()
             } else if viewModel.displayError {
-                Text("Create screen error") // TODO: create an Error View
+                ErrorView {
+                    Task {
+                        await viewModel.getPokemons()
+                    }
+                }
             } else if !viewModel.pokemons.isEmpty {
                 contentView(viewModel.pokemons)
             } else {
@@ -30,7 +34,7 @@ struct HomeView: View {
             }
         }
         .task {
-            await viewModel.getUser()
+            await viewModel.getPokemons()
         }
     }
 }
@@ -52,6 +56,7 @@ private extension HomeView {
             ScrollView {
                 SearchBox(searchText: $searchText)
                     .padding(.bottom)
+                    .padding(.horizontal)
                 LazyVGrid(columns: adaptiveColumn, spacing: 20) {
                     ForEach(filteredPokemons, id: \.name) { item in
                         NavigationLink(
@@ -70,9 +75,9 @@ private extension HomeView {
                     }
                     .navigationTitle("Pokedex")
                 }
+                .padding()
             }
             .scrollIndicators(.hidden)
-            .padding()
         }
     }
 }

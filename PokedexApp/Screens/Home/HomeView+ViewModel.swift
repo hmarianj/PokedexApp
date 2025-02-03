@@ -20,8 +20,9 @@ extension HomeView {
 extension HomeView.ViewModel {
     
     @MainActor
-    func getUser() async {
+    func getPokemons() async {
         isLoading = true
+        displayError = false
         do {
             let response = try await HTTPClient.shared.execute(
                 Request(
