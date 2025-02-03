@@ -39,6 +39,8 @@ struct Evolution: Codable {
 struct PokemonSpecies: Codable {
     let color: ApiColor
     let evolutionChain: EvolutionChain
+    let genderRate: Int
+    let flavorTextEntries: [FlavorTextEntries]
     
     struct ApiColor: Codable {
         let name: BackgroundColor
@@ -46,6 +48,16 @@ struct PokemonSpecies: Codable {
     
     struct EvolutionChain: Codable {
         let url: String
+    }
+    
+    struct FlavorTextEntries: Codable {
+        let flavorText: String
+        let language: Language
+        
+    }
+
+    struct Language: Codable {
+        let name: String
     }
 }
 
@@ -63,4 +75,15 @@ struct PokemonDetails: Codable {
     }
 }
 
+struct TypeAPIResponse: Codable {
+    let damageRelations: DamageRelations
 
+    struct DamageRelations: Codable {
+        let doubleDamageFrom: [DamageType]
+        let halfDamageFrom: [DamageType]
+    }
+
+    struct DamageType: Codable {
+        let name: String
+    }
+}

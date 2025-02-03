@@ -36,23 +36,36 @@ struct HomeView: View {
 }
 
 private extension HomeView {
+    
+    var filteredPokemons: [Pokemon] {
+        if searchText.isEmpty {
+            return viewModel.pokemons
+        } else {
+            return viewModel.pokemons.filter {
+                $0.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
+    
     func contentView(_ pokemons: [Pokemon]) -> some View {
         NavigationStack {
             ScrollView {
-                SearchBox(searchText: .constant(""))
+                SearchBox(searchText: $searchText)
                     .padding(.bottom)
                 LazyVGrid(columns: adaptiveColumn, spacing: 20) {
-                    ForEach(viewModel.pokemons, id: \.name) { item in
+                    ForEach(filteredPokemons, id: \.name) { item in
                         NavigationLink(
                             destination: DetailsView(
                                 id: item.id,
-                                title: item.name, // TODO: pasa valor real
-                                description: item.name, // TODO: pasa valor real
-                                number: item.name,
-                                imageUrl: item.imageUrl // TODO: parametrizar
+                                title: item.name,
+                                imageUrl: item.imageUrl
                             )
                         ) {
-                            CardView(imageUrl: item.imageUrl, name: item.name)
+                            CardView(
+                                imageUrl: item.imageUrl,
+                                name: item.name,
+                                id: item.id
+                            )
                         }
                     }
                     .navigationTitle("Pokedex")

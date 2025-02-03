@@ -10,10 +10,10 @@ import SwiftUI
 struct EvolutionView: View {
     
     let pokemons: [Pokemon]
+    let bgColor: Color
 
     var body: some View {
-        // La vista de evoluciones solo se muestra si al menos hay dos elementos
-        // TODO: cambiar a ingles el comentario
+        /// The evolution view is only shown if there are at least two elements
         if pokemons.count >= 2 {
             VStack {
                 titleSection
@@ -22,7 +22,8 @@ struct EvolutionView: View {
                         OvalCard(
                             titleName: pokemon.name,
                             imageUrl: pokemon.imageUrl,
-                            numberID: pokemon.id
+                            numberID: pokemon.id,
+                            bgColor: bgColor
                         )
                         if pokemons.last?.id != pokemon.id {
                             arrowLevel
@@ -65,6 +66,6 @@ private extension EvolutionView {
     EvolutionView(pokemons: [
         .init(name: "Metapod", url: "https://pokeapi.co/api/v2/pokemon-species/11/"),
         .init(name: "Butterfree", url: "https://pokeapi.co/api/v2/pokemon-species/12/")
-    ])
+    ], bgColor: Color.bgBlue)
         .padding()
 }

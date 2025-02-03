@@ -11,10 +11,10 @@ import SwiftUI
 struct DetailsView: View {
     let id: Int
     let title: String
-    let description: String
-    let number: String
     let imageUrl: String
     @StateObject var viewModel: ViewModel = ViewModel()
+    
+    @State var circleBackgroundColor: Color = .gray
 
     var body: some View {
         ScrollView {
@@ -27,8 +27,8 @@ struct DetailsView: View {
                     descriptionSection
                     Divider()
                     specificationSection
-                    GenderView(maleFraction: 0.45) // TODO: parametrizar
-                    WeaknessView()
+                    GenderView(maleFraction: viewModel.maleFraction)
+                    WeaknessView(weaknesses: viewModel.weaknesses)
                     evolutionSection
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -36,6 +36,7 @@ struct DetailsView: View {
             .offset(y: -80)
             .padding()
         }
+        .scrollIndicators(.hidden)
         .ignoresSafeArea()
         .task {
             await viewModel.loadPokemonSpeciesData(id: id)
@@ -62,39 +63,45 @@ private extension DetailsView {
             ZStack {
                 Circle()
                     .frame(width: 498, height: 498)
-                    .offset(x: 0, y: -200)
-                    .foregroundStyle(pillBackgroundColor)
+                    .offset(x: 0, y: -160)
+                    .foregroundStyle(circleBackgroundColor)
                     .clipped()
-                Image("aqua-icon")
-                    .frame(width: 180, height: 180)
-                    .offset(y: -60)
+                if let firstTypeName = viewModel.pokemonDetails?.types.first?.type.name,
+                   let iconType = IconType(rawValue: firstTypeName) {
+                    Image(iconType.iconType)
+                        .resizable()
+                        .renderingMode(.template)
+                        .scaledToFit()
+                        .frame(width: 180, height: 180)
+                        .foregroundStyle(Color.white.opacity(0.2))
+                        .offset(y: -20)
+                        .onAppear {
+                            iconType.getColor { color in
+                                withAnimation {
+                                    circleBackgroundColor = color
+                                }
+                            }
+                        }
+                }
             }
-        }
-    }
-    
-    var pillBackgroundColor: Color {
-        // si tengo pokemon species -> pokemon.apiColor.name.bgColor
-        if let pokemonSpecies = viewModel.pokemonSpecies {
-            return pokemonSpecies.color.name.bgColor
-        } else {
-            return .gray
+            
         }
     }
     
     var titleSection: some View {
-        Text(title)
+        Text(title.capitalized)
             .font(.system(.largeTitle, weight: .bold))
             .multilineTextAlignment(.center)
     }
     
     var numberIDSection: some View {
-        Text("N\(id)")
+        Text("Nº\(String(format: "%03d", id))")
             .font(.headline)
             .foregroundStyle(.gray)
     }
     
     var descriptionSection: some View {
-        Text(description)
+        Text(viewModel.pokemonDescription)
             .font(.title3)
             .foregroundStyle(.black.opacity(0.8))
     }
@@ -105,8 +112,8 @@ private extension DetailsView {
             HStack {
                 ForEach(pokemonDetails.types, id: \.type.name) { type in
                     TagView(
-                        content: TagView.Content(type: type.type.name.capitalized),
-                        style: TagView.Style.standar
+                        content: TagView.Content(type: type.type.name),
+                        style: TagView.Style.standard
                     )
                 }
             }
@@ -145,7 +152,7 @@ private extension DetailsView {
         if viewModel.isLoading {
             ProgressView()
         } else if !viewModel.evolutionPokemons.isEmpty {
-            EvolutionView(pokemons: viewModel.evolutionPokemons)
+            EvolutionView(pokemons: viewModel.evolutionPokemons, bgColor: circleBackgroundColor)
         }
     }
 }
@@ -154,8 +161,6 @@ private extension DetailsView {
     DetailsView(
         id: 1,
         title: "Squirtle",
-        description: "Es un Pokémon de tipo agua, de la primera generación, que se caracteriza por ser una tortuguita con un caparazón blando al nacer. Es uno de los Pokémon iniciales que se pueden elegir en la región de Kanto",
-        number: "007",
         imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png"
     )
 }
@@ -173,6 +178,7 @@ extension DetailsView {
         @Published var pokemonSpecies: PokemonSpecies? = nil
         @Published var pokemonDetails: PokemonDetails? = nil
         @Published var evolutionPokemons: [Pokemon] = []
+        @Published var weaknesses: [String] = []
         
         init() {
             let jsonDecoder = JSONDecoder()
@@ -181,6 +187,21 @@ extension DetailsView {
         }
         
         // TODO: Variables para pokemon species (loading/error?)
+        
+        var maleFraction: CGFloat {
+            guard let genderRate = pokemonSpecies?.genderRate, genderRate != -1 else { return 0 }
+            return CGFloat(1 - (Double(genderRate) / 8.0))
+        }
+        
+        var pokemonDescription: String {
+            guard let entries = pokemonSpecies?.flavorTextEntries else { return "Descripción no disponible" }
+            
+            let rawText = entries.first(where: { $0.language.name == "en" })?.flavorText.replacingOccurrences(of: "\n", with: " ") ?? "Descripción no disponible"
+            
+            return rawText
+                .replacingOccurrences(of: "POKéMON", with: "Pokémon")
+                .replacingOccurrences(of: "POKEMON", with: "Pokémon")
+        }
         
         func loadPokemonSpeciesData(id: Int) async {
             isLoading = true
@@ -197,10 +218,10 @@ extension DetailsView {
             } catch {
                 isLoading = false
                 // TODO: Error
-//                displayError = true
+                //                displayError = true
             }
         }
-
+        
         func loadPokemonDetails(id: Int) async {
             isLoading = true
             do {
@@ -212,10 +233,11 @@ extension DetailsView {
                     responseType: PokemonDetails.self
                 )
                 self.pokemonDetails = response
+                await loadWeaknesses(types: response.types)
+                
             } catch {
                 isLoading = false
-                // TODO: Error
-//                displayError = true
+                print("Error al cargar los detalles del Pokémon")
             }
         }
         
@@ -235,9 +257,40 @@ extension DetailsView {
             } catch {
                 isLoading = false
                 // TODO: Error
-//                displayError = true
+                //                displayError = true
+            }
+        }
+        
+        func loadWeaknesses(types: [PokemonDetails.Types]) async {
+            var allWeaknesses: Set<String> = []
+            var allResistances: Set<String> = []
+            
+            for type in types {
+                let typeName = type.type.name
+                let typeURL = "https://pokeapi.co/api/v2/type/\(typeName)/"
+                
+                do {
+                    let response = try await HTTPClient.shared.execute(
+                        Request(
+                            urlString: typeURL,
+                            method: .get([])
+                        ),
+                        responseType: TypeAPIResponse.self
+                    )
+                    
+                    let weaknesses = response.damageRelations.doubleDamageFrom.map { $0.name }
+                    let resistances = response.damageRelations.halfDamageFrom.map { $0.name }
+                    allWeaknesses.formUnion(weaknesses)
+                    allResistances.formUnion(resistances)
+                    allWeaknesses.subtract(allResistances)
+                } catch {
+                    isLoading = false
+                    // TODO: error view
+                }
             }
             
+            isLoading = false
+            self.weaknesses = Array(allWeaknesses)
         }
     }
 }
@@ -283,29 +336,103 @@ enum BackgroundColor: String, Codable {
     case white
     case yellow
     
-    // TODO: crear paleta de colores
     var bgColor: Color {
         switch self {
         case .black:
-            Color.black
+            Color.bgBlack
         case .blue:
-            Color.blue
+            Color.bgBlue
         case .brown:
-            Color.brown
+            Color.bgBrown
         case .gray:
-            Color.gray
+            Color.bgGray
         case .green:
-            Color.green
+            Color.bgGreen
         case .pink:
-            Color.pink
+            Color.bgPink
         case .purple:
-            Color.purple
+            Color.bgPurple
         case .red:
-            Color.red
+            Color.bgFire
         case .white:
-            Color.white
+            Color.bgWhiteSmoke
         case .yellow:
-            Color.yellow
+            Color.bgYellow
+        }
+    }
+}
+
+enum IconType: String {
+    case normal
+    case fighting
+    case flying
+    case poison
+    case ground
+    case rock
+    case bug
+    case ghost
+    case steel
+    case fire
+    case water
+    case grass
+    case electric
+    case psychic
+    case ice
+    case dragon
+    case dark
+    case fairy
+    case stellar
+    
+    func getColor(callback: @escaping (Color) -> Void) {
+        if let uiImage = UIImage(named: iconType) {
+            uiImage.getColors { colors in
+                if let primary = colors?.background {
+                    callback(Color(primary))
+                }
+            }
+        }
+    }
+    
+    var iconType: String {
+        switch self {
+        case .normal:
+            "normal-type"
+        case .fighting:
+            "fighting-type"
+        case .flying:
+            "flying-type"
+        case .poison:
+            "poison-type"
+        case .ground:
+            "ground-type"
+        case .rock:
+            "rock-type"
+        case .bug:
+            "bug-type"
+        case .ghost:
+            "ghost-type"
+        case .steel:
+            "steel-type"
+        case .fire:
+            "fire-type"
+        case .water:
+            "water-type"
+        case .grass:
+            "grass-type"
+        case .electric:
+            "electric-type"
+        case .psychic:
+            "psychic-type"
+        case .ice:
+            "ice-type"
+        case .dragon:
+            "dragon-type"
+        case .dark:
+            "rock-type"
+        case .fairy:
+            "fairy-type"
+        case .stellar:
+            "stellar-type"
         }
     }
 }

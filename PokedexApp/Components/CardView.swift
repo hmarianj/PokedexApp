@@ -6,21 +6,24 @@
 //
 
 import SwiftUI
+import UIImageColors
 
 struct CardView: View {
     
+    @State private var backgroundColor: Color = .gray.opacity(0.2)
     let imageUrl: String
     let name: String
+    let id: Int
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                titleView
-                TagView(content: TagView.Content(type: "Water"), style: TagView.Style.standar)
-                TagView(content: TagView.Content(type: "Water"), style: TagView.Style.standar)
+                titleSection
+                numberIDSection
+                Spacer() // TODO: check this in preview
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, minHeight: 90 ,alignment: .leading)
         .padding()
         .background {
             cardImageBackground
@@ -31,11 +34,21 @@ struct CardView: View {
 }
 
 private extension CardView {
-    var titleView: some View {
+    var titleSection: some View {
         Text(name.capitalized)
             .font(.system(.title2, weight: .bold))
             .foregroundStyle(.white)
             .multilineTextAlignment(.leading)
+    }
+    
+    var numberIDSection: some View {
+        Text("Nº\(String(format: "%03d", id))")
+            .font(.system(.caption2, weight: .semibold))
+            .foregroundStyle(.gray)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 4)
+            .background(.white)
+            .cornerRadius(16)
     }
     
     var pokeballImageBackground: some View {
@@ -66,16 +79,17 @@ private extension CardView {
 }
 
 
-
 #Preview {
     HStack {
         CardView(
             imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png",
-            name: "Pokemon"
+            name: "Pokemon",
+            id: 007
         )
         CardView(
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png",
-            name: "Pokemon"
+            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/8.png",
+            name: "Pokemon",
+            id: 008
         )
     }
 }

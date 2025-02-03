@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EC1F171C2D43D66300C33266 /* CoreNetworking in Frameworks */ = {isa = PBXBuildFile; productRef = EC1F171B2D43D66300C33266 /* CoreNetworking */; };
+		EC1F17532D4D55AA00C33266 /* UIImageColors in Frameworks */ = {isa = PBXBuildFile; productRef = EC1F17522D4D55AA00C33266 /* UIImageColors */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC1F17532D4D55AA00C33266 /* UIImageColors in Frameworks */,
 				EC1F171C2D43D66300C33266 /* CoreNetworking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,6 +120,7 @@
 			name = PokedexApp;
 			packageProductDependencies = (
 				EC1F171B2D43D66300C33266 /* CoreNetworking */,
+				EC1F17522D4D55AA00C33266 /* UIImageColors */,
 			);
 			productName = PokedexApp;
 			productReference = EC1F14E12D2C308F00C33266 /* PokedexApp.app */;
@@ -203,6 +206,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				EC1F16DB2D43D0C900C33266 /* XCRemoteSwiftPackageReference "CoreNetworking" */,
+				EC1F17512D4D55AA00C33266 /* XCRemoteSwiftPackageReference "UIImageColors" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EC1F14E22D2C308F00C33266 /* Products */;
@@ -571,6 +575,14 @@
 				minimumVersion = 0.1.1;
 			};
 		};
+		EC1F17512D4D55AA00C33266 /* XCRemoteSwiftPackageReference "UIImageColors" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jathu/UIImageColors";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -578,6 +590,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EC1F16DB2D43D0C900C33266 /* XCRemoteSwiftPackageReference "CoreNetworking" */;
 			productName = CoreNetworking;
+		};
+		EC1F17522D4D55AA00C33266 /* UIImageColors */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EC1F17512D4D55AA00C33266 /* XCRemoteSwiftPackageReference "UIImageColors" */;
+			productName = UIImageColors;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

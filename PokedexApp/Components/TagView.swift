@@ -6,14 +6,16 @@
 //
 
 import SwiftUI
+import UIImageColors
 
 struct TagView: View {
+    @State private var backgroundColor: Color = .gray.opacity(0.4)
     let content: Content
     let style: Style
     
     var body: some View {
         HStack {
-            Image(style.iconType)
+            Image(content.iconType?.iconType ?? "")
                 .resizable()
                 .scaledToFit()
                 .frame(width: style.width, height: style.height)
@@ -24,34 +26,43 @@ struct TagView: View {
                 .font(style.fontSize)
                 .foregroundStyle(.white)
         }
+        .onAppear {
+            loadBackgroundColor()
+        }
         .padding(.horizontal, style.horizontalPadding)
         .padding(.vertical, style.verticalPadding)
-        .background(style.background)
+        .background(backgroundColor)
         .cornerRadius(28)
     }
 }
 
-// TODO: check that parameters need
-
 extension TagView {
+    
+    private func loadBackgroundColor() {
+        if let iconType = content.iconType {
+            iconType.getColor { color in
+                backgroundColor = color
+            }
+        }
+    }
+    
     struct Content {
         let type: String
+        var iconType: IconType? {
+            IconType(rawValue: type.lowercased())
+        }
     }
     
     struct Style {
-        let iconType: String
         let fontSize: Font
-        let background: Color
         let width: CGFloat
         let height: CGFloat
         let iconPadding: CGFloat
         let horizontalPadding: CGFloat
         let verticalPadding: CGFloat
         
-        static let standar = Style(
-            iconType: "aqua-type",
+        static let standard = Style(
             fontSize: .system(.subheadline, weight: .bold),
-            background: .cyan.opacity(0.4),
             width: 14,
             height: 14,
             iconPadding: 2,
@@ -60,13 +71,11 @@ extension TagView {
         )
         
         static let category = Style(
-            iconType: "fire-type",
             fontSize: .system(.title3, weight: .bold),
-            background: .orange.opacity(0.4),
-            width: 24,
-            height: 24,
-            iconPadding: 8,
-            horizontalPadding: 30,
+            width: 18,
+            height: 18,
+            iconPadding: 4,
+            horizontalPadding: 10,
             verticalPadding: 6
         )
     }
@@ -75,16 +84,17 @@ extension TagView {
 #Preview {
     VStack {
         TagView(
-            content: TagView
-                .Content(type: "Water"
-            ),
-            style: TagView.Style.standar
+            content: TagView.Content(type: "Water"),
+            style: TagView.Style.standard
         )
         TagView(
-            content: TagView
-                .Content(type: "Water"
-            ),
+            content: TagView.Content(type: "Fire"),
+            style: TagView.Style.category
+        )
+        TagView(
+            content: TagView.Content(type: "Electric"),
             style: TagView.Style.category
         )
     }
+    .padding()
 }

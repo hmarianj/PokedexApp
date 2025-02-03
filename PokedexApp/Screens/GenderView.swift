@@ -25,11 +25,11 @@ struct GenderView: View {
 
 private extension GenderView {
     var malePercentageString: String {
-        "\(Int(maleFraction * 100))%"
+        String(format: "%.1f%%", maleFraction * 100)
     }
-    
+
     var femalePercentageString: String {
-        "\(Int(((1 - maleFraction) * 100).rounded()))%"
+        String(format: "%.1f%%", (1 - maleFraction) * 100)
     }
     
     var titleSection: some View {

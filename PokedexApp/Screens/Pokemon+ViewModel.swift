@@ -11,6 +11,7 @@ import CoreNetworking
 extension HomeView {
     class ViewModel: ObservableObject {
         @Published var pokemons: [Pokemon] = []
+        @Published var pokemonDetails: PokemonDetails? = nil
         @Published var isLoading: Bool = false
         @Published var displayError: Bool = false
     }

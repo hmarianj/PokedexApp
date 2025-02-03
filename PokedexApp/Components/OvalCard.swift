@@ -12,13 +12,13 @@ struct OvalCard: View {
     let titleName: String
     let imageUrl: String
     let numberID: Int
+    let bgColor: Color
     
     var body: some View {
         HStack {
             imageSection
             VStack(alignment: .leading) {
                 specificationSection
-                tagViewSection
             }
             .padding(.horizontal)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -37,7 +37,7 @@ private extension OvalCard {
         ZStack {
             RoundedRectangle(cornerRadius: 50)
                 .frame(width: 120,height: 100)
-                .foregroundStyle(.cyan.opacity(0.4))
+                .foregroundStyle(bgColor)
             AsyncImage(url: URL(string: imageUrl)) { image in
                 image
                     .resizable()
@@ -51,17 +51,10 @@ private extension OvalCard {
     
     var specificationSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(titleName)
+            Text(titleName.capitalized)
                 .font(.system(.title3, weight: .semibold))
             Text("N\(numberID)")
                 .font(.caption)
-        }
-    }
-    
-    var tagViewSection: some View {
-        HStack {
-            TagView(content: TagView.Content(type: ""), style: TagView.Style.standar)
-            TagView(content: TagView.Content(type: ""), style: TagView.Style.standar)
         }
     }
 }
@@ -70,7 +63,8 @@ private extension OvalCard {
     OvalCard(
         titleName: "Squirtle",
         imageUrl: "pokemon-agua",
-        numberID: 007
+        numberID: 007,
+        bgColor: Color.bgBlue
     )
     .padding()
 }

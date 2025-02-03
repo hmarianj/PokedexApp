@@ -8,20 +8,23 @@
 import SwiftUI
 
 struct WeaknessView: View {
+    
+    let weaknesses: [String]
+    
     var body: some View {
         VStack {
             titleSection
-                HStack(spacing: 20) {
-                    TagView(content: TagView.Content(type: "Water"), style: TagView.Style.category)
-                    TagView(content: TagView.Content(type: "Water"), style: TagView.Style.category)
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(weaknesses, id: \.self) { weakness in
+                        TagView(content: TagView.Content(type: weakness), style: TagView.Style.category)
+                    }
                 }
-            HStack(spacing: 20) {
-                TagView(content: TagView.Content(type: "Water"), style: TagView.Style.category)
-                TagView(content: TagView.Content(type: "Water"), style: TagView.Style.category)
             }
-            }
+            .scrollIndicators(.hidden)
         }
     }
+}
 
 private extension WeaknessView {
     
@@ -34,5 +37,5 @@ private extension WeaknessView {
 }
 
 #Preview {
-    WeaknessView()
+    WeaknessView(weaknesses: ["fire", "ice", "poison", "flying", "bug", "ground", "psychic"])
 }
