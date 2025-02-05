@@ -14,7 +14,9 @@ struct DetailsView: View {
     let imageUrl: String
     @StateObject var viewModel: ViewModel = ViewModel()
     @State var circleBackgroundColor: Color = .gray
-
+    @AppStorage(AppStorageKeys.myPokemons.rawValue) var myPokemons: [Pokemon] = []
+    
+    
     var body: some View {
         ScrollView {
             backgroundImage
@@ -56,6 +58,12 @@ private extension DetailsView {
                 ProgressView()
             }
             .frame(width: 180, height: 180)
+            PokeballButton(isCaptured: isCaptured) {
+                withAnimation {
+                    toggleCaptured()
+                }
+            }
+            .offset(x: 150, y: -70)
         }
         .frame(maxWidth: .infinity, minHeight: 330)
         .background {
@@ -156,6 +164,22 @@ private extension DetailsView {
                 pokemons: viewModel.evolutionPokemons,
                 bgColor: circleBackgroundColor
             )
+        }
+    }
+    
+    var isCaptured: Bool {
+        return myPokemons.contains(where: { item in
+            item.id == self.id
+        })
+    }
+    
+    func toggleCaptured() {
+        if isCaptured {
+            myPokemons.removeAll { item in
+                item.id == self.id
+            }
+        } else {
+            myPokemons.append(.init(name: title, url: "https://pokeapi.co/api/v2/pokemon/\(id)"))
         }
     }
     
