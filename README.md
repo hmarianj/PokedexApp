@@ -19,7 +19,7 @@ A Pokedex app for Apple devices.
 https://github.com/user-attachments/assets/2928d1d8-be78-47bc-b5ff-f244284e86a9
 
 ### iPad
-![iPad](https://github.com/user-attachments/assets/98655e04-f838-4e85-8b79-87318358cf70)
+![ipad](https://github.com/user-attachments/assets/de924c05-1edf-4409-8097-97abbda5260e)
 
 ### iPhone
 | List | Detail |
