@@ -27,7 +27,7 @@ private extension GenderView {
     var malePercentageString: String {
         String(format: "%.1f%%", maleFraction * 100)
     }
-
+    
     var femalePercentageString: String {
         String(format: "%.1f%%", (1 - maleFraction) * 100)
     }

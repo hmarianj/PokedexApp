@@ -11,7 +11,7 @@ import UIImageColors
 struct CardView: View {
     
     @State private var backgroundColor: Color = Color.cyan.opacity(0.4)
-    private static var colorCache = NSCache<NSString, UIColor>() // Caché para colores
+    private static var colorCache = NSCache<NSString, UIColor>()
     let imageUrl: String
     let name: String
     let id: Int
@@ -73,7 +73,7 @@ private extension CardView {
                         .scaleEffect(x: 1.5, y: 1.5)
                         .task {
                             extractColors(from: image.asUIImage())
-
+                            
                         }
                 } placeholder: {
                     ProgressView()
@@ -85,32 +85,27 @@ private extension CardView {
     }
     
     private func extractColors(from image: UIImage) {
-           let cacheKey = NSString(string: imageUrl)
-           
-           // Verificar si el color ya está en caché
-           if let cachedColor = Self.colorCache.object(forKey: cacheKey) {
-               backgroundColor = Color(cachedColor)
-               return
-           }
-           
-           // Procesar en segundo plano
-           DispatchQueue.global(qos: .userInitiated).async {
-               if let colors = image.getColors() {
-                   
-                   if let primaryColor = colors.background {
-                       // Guardar en caché
-                       Self.colorCache.setObject(primaryColor, forKey: cacheKey)
-                       
-                       // Actualizar en el hilo principal
-                       DispatchQueue.main.async {
-                           withAnimation {
-                               backgroundColor = Color(primaryColor)
-                           }
-                       }
-                   }
-               }
-           }
-       }
+        let cacheKey = imageUrl as NSString
+        
+        if let cachedColor = Self.colorCache.object(forKey: cacheKey) {
+            backgroundColor = Color(cachedColor)
+            return
+        }
+        
+        DispatchQueue.global(qos: .userInitiated).async { [cacheKeyString = cacheKey as String] in
+            if let colors = image.getColors() {
+                if let primaryColor = colors.background {
+                    Self.colorCache.setObject(primaryColor, forKey: cacheKeyString as NSString)
+                    
+                    DispatchQueue.main.async {
+                        withAnimation {
+                            backgroundColor = Color(primaryColor)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -130,38 +125,4 @@ private extension CardView {
         .fixedSize(horizontal: false, vertical: true)
     }
     .padding()
-    
-}
-
-extension View {
-// This function changes our View to UIView, then calls another function
-// to convert the newly-made UIView to a UIImage.
-    public func asUIImage() -> UIImage {
-        let controller = UIHostingController(rootView: self)
-        
- // Set the background to be transparent incase the image is a PNG, WebP or (Static) GIF
-        controller.view.backgroundColor = .clear
-        
-        controller.view.frame = CGRect(x: 0, y: CGFloat(Int.max), width: 1, height: 1)
-        UIApplication.shared.windows.first!.rootViewController?.view.addSubview(controller.view)
-        
-        let size = controller.sizeThatFits(in: UIScreen.main.bounds.size)
-        controller.view.bounds = CGRect(origin: .zero, size: size)
-        controller.view.sizeToFit()
-        
-// here is the call to the function that converts UIView to UIImage: `.asUIImage()`
-        let image = controller.view.asUIImage()
-        controller.view.removeFromSuperview()
-        return image
-    }
-}
-
-extension UIView {
-// This is the function to convert UIView to UIImage
-    public func asUIImage() -> UIImage {
-        let renderer = UIGraphicsImageRenderer(bounds: bounds)
-        return renderer.image { rendererContext in
-            layer.render(in: rendererContext.cgContext)
-        }
-    }
 }

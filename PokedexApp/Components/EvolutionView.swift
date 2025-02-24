@@ -9,11 +9,10 @@ import SwiftUI
 
 struct EvolutionView: View {
     
-    // The id of the detail view
     let currentId: Int
     let pokemons: [Pokemon]
     let bgColor: Color
-
+    
     var body: some View {
         /// The evolution view is only shown if there are at least two elements
         if pokemons.count >= 2 {
@@ -74,15 +73,15 @@ private extension EvolutionView {
     }
     
     var arrowLevel: some View {
-            HStack {
-                Spacer()
-                Image(systemName: "arrowshape.down.fill")
-                    .font(.title2)
-                    .foregroundStyle(bgColor)
-                Spacer()
-            }
-            .padding(12)
+        HStack {
+            Spacer()
+            Image(systemName: "arrowshape.down.fill")
+                .font(.title2)
+                .foregroundStyle(bgColor)
+            Spacer()
         }
+        .padding(12)
+    }
 }
 
 #Preview {
@@ -94,5 +93,5 @@ private extension EvolutionView {
         ],
         bgColor: Color.bgBlue
     )
-        .padding()
+    .padding()
 }
