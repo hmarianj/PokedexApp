@@ -9,10 +9,9 @@ import Foundation
 import SwiftUI
 
 struct PokeballButton: View {
-    
     var isCaptured: Bool
     var action: () -> Void
-    
+
     var body: some View {
         Button {
             action()

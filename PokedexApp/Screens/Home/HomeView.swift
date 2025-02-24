@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct HomeView: View {
-    
     @StateObject private var viewModel: ViewModel = ViewModel()
-    
+
     private let adaptiveColumn = [
         GridItem(.adaptive(minimum: 150))
     ]
-    
+
     @State var searchText: String = ""
-    
+
     var body: some View {
         VStack {
             if viewModel.isLoading {
@@ -40,7 +39,6 @@ struct HomeView: View {
 }
 
 private extension HomeView {
-    
     var filteredPokemons: [Pokemon] {
         if searchText.isEmpty {
             return viewModel.pokemons
@@ -50,8 +48,8 @@ private extension HomeView {
             }
         }
     }
-    
-    func contentView(_ pokemons: [Pokemon]) -> some View {
+
+    func contentView(_: [Pokemon]) -> some View {
         NavigationStack {
             ScrollView {
                 SearchBox(searchText: $searchText)

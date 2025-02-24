@@ -12,7 +12,7 @@ struct TagView: View {
     @State private var backgroundColor: Color = .gray.opacity(0.4)
     let content: Content
     let style: Style
-    
+
     var body: some View {
         HStack {
             Image(content.iconType?.iconType ?? "")
@@ -37,7 +37,6 @@ struct TagView: View {
 }
 
 extension TagView {
-    
     private func loadBackgroundColor() {
         if let iconType = content.iconType {
             iconType.getColor { color in
@@ -45,14 +44,14 @@ extension TagView {
             }
         }
     }
-    
+
     struct Content {
         let type: String
         var iconType: IconType? {
             IconType(rawValue: type.lowercased())
         }
     }
-    
+
     struct Style {
         let fontSize: Font
         let width: CGFloat
@@ -60,7 +59,7 @@ extension TagView {
         let iconPadding: CGFloat
         let horizontalPadding: CGFloat
         let verticalPadding: CGFloat
-        
+
         static let standard = Style(
             fontSize: .system(.subheadline, weight: .bold),
             width: 14,
@@ -69,7 +68,7 @@ extension TagView {
             horizontalPadding: 6,
             verticalPadding: 4
         )
-        
+
         static let category = Style(
             fontSize: .system(.title3, weight: .bold),
             width: 18,

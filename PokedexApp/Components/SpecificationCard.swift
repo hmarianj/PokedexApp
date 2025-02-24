@@ -1,5 +1,5 @@
 //
-//  SpecificationView.swift
+//  SpecificationCard.swift
 //  PokedexApp
 //
 //  Created by MH on 14/01/2025.
@@ -7,13 +7,12 @@
 
 import SwiftUI
 
-
 struct SpecificationCard: View {
     var imageName: String
     var title: String
     var value: String
     var metric: String
-    
+
     var body: some View {
         VStack {
             categorySection
@@ -23,7 +22,6 @@ struct SpecificationCard: View {
 }
 
 private extension SpecificationCard {
-    
     var categorySection: some View {
         HStack {
             Image(imageName)
@@ -35,7 +33,7 @@ private extension SpecificationCard {
                 .foregroundStyle(.gray)
         }
     }
-    
+
     var descriptionSection: some View {
         Text(value + metric)
             .font(.system(.title3, weight: .semibold))
@@ -52,7 +50,7 @@ private extension SpecificationCard {
     SpecificationCard(
         imageName: "weigth-icon",
         title: "Weigth",
-        value: "14,5 " ,
+        value: "14,5 ",
         metric: "kg"
     )
 }

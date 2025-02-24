@@ -1,12 +1,12 @@
 //
-//  Pokemon+ViewModel.swift
+//  HomeView+ViewModel.swift
 //  PokedexApp
 //
 //  Created by MH on 24/01/2025.
 //
 
-import Foundation
 import CoreNetworking
+import Foundation
 
 extension HomeView {
     class ViewModel: ObservableObject {
@@ -18,7 +18,6 @@ extension HomeView {
 }
 
 extension HomeView.ViewModel {
-    
     @MainActor
     func getPokemons() async {
         isLoading = true
@@ -32,9 +31,8 @@ extension HomeView.ViewModel {
                 responseType: PokemonListResponse.self
             )
             isLoading = false
-            self.pokemons = response.results
-        }
-        catch {
+            pokemons = response.results
+        } catch {
             isLoading = false
             displayError = true
         }

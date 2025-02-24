@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ErrorView: View {
     var onRetry: () -> Void
-    
+
     var body: some View {
         VStack {
             Text("Algo salio mal")

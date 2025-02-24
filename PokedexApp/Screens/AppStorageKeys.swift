@@ -6,5 +6,5 @@
 //
 
 enum AppStorageKeys: String {
-    case myPokemons = "myPokemons"
+    case myPokemons
 }

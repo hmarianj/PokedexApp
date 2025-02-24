@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct WeaknessView: View {
-    
     let weaknesses: [String]
-    
+
     var body: some View {
         VStack {
             titleSection
@@ -27,7 +26,6 @@ struct WeaknessView: View {
 }
 
 private extension WeaknessView {
-    
     var titleSection: some View {
         Text("Weaknesses")
             .padding(.vertical)

@@ -16,13 +16,12 @@ protocol PokemonServiceProtocol {
 }
 
 struct PokemonService: PokemonServiceProtocol {
-    
     init() {
         let jsonDecoder = JSONDecoder()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
         HTTPClient.shared.jsonDecoder = jsonDecoder
     }
-    
+
     func getPokemonSpeciesData(id: Int) async throws -> PokemonSpecies {
         try await HTTPClient.shared.execute(
             Request(
@@ -32,7 +31,7 @@ struct PokemonService: PokemonServiceProtocol {
             responseType: PokemonSpecies.self
         )
     }
-    
+
     func getPokemonDetailsData(id: Int) async throws -> PokemonDetails {
         try await HTTPClient.shared.execute(
             Request(
@@ -42,7 +41,7 @@ struct PokemonService: PokemonServiceProtocol {
             responseType: PokemonDetails.self
         )
     }
-    
+
     func getPokemonsEvolutionData(url: String) async throws -> [Pokemon] {
         let response = try await HTTPClient.shared.execute(
             Request(
@@ -53,7 +52,7 @@ struct PokemonService: PokemonServiceProtocol {
         )
         return response.pokemons
     }
-    
+
     func getTypeWeaknesses(for typeName: String) async throws -> TypeAPIResponse {
         try await HTTPClient.shared.execute(
             Request(

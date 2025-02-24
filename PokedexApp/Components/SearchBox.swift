@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct SearchBox: View {
-    
     @Binding var searchText: String
-    
+
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
@@ -32,9 +31,8 @@ struct SearchBox: View {
         }
         .background(.gray.opacity(0.1))
         .cornerRadius(16)
-        }
     }
-
+}
 
 #Preview {
     SearchBox(searchText: .constant(""))

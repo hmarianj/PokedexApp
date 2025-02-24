@@ -5,8 +5,8 @@
 //  Created by MH on 03/02/2025.
 //
 
-import UIKit
 import SwiftUI
+import UIKit
 
 enum IconType: String {
     case normal
@@ -28,7 +28,7 @@ enum IconType: String {
     case dark
     case fairy
     case stellar
-    
+
     func getColor(callback: @escaping (Color) -> Void) {
         if let uiImage = UIImage(named: iconType) {
             uiImage.getColors { colors in
@@ -38,7 +38,7 @@ enum IconType: String {
             }
         }
     }
-    
+
     var iconType: String {
         switch self {
         case .normal:

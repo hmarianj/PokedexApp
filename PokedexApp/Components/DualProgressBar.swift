@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DualProgressBar: View {
     var fraction: CGFloat
-    
+
     var body: some View {
         VStack {
             GeometryReader { geometry in

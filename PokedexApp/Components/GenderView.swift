@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GenderView: View {
     var maleFraction: CGFloat
-    
+
     var body: some View {
         VStack {
             titleSection
@@ -27,16 +27,16 @@ private extension GenderView {
     var malePercentageString: String {
         String(format: "%.1f%%", maleFraction * 100)
     }
-    
+
     var femalePercentageString: String {
         String(format: "%.1f%%", (1 - maleFraction) * 100)
     }
-    
+
     var titleSection: some View {
         Text("Gender")
             .font(.system(.title3, weight: .semibold))
     }
-    
+
     func percentageSection(imageName: String, percentage: String) -> some View {
         HStack {
             imageSection(imageName: imageName)
@@ -44,7 +44,7 @@ private extension GenderView {
                 .font(.callout)
         }
     }
-    
+
     func imageSection(imageName: String) -> some View {
         Image(imageName)
             .resizable()

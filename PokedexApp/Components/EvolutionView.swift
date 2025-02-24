@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct EvolutionView: View {
-    
     let currentId: Int
     let pokemons: [Pokemon]
     let bgColor: Color
-    
+
     var body: some View {
         /// The evolution view is only shown if there are at least two elements
         if pokemons.count >= 2 {
@@ -38,7 +37,6 @@ struct EvolutionView: View {
 }
 
 private extension EvolutionView {
-    
     @ViewBuilder
     func card(for pokemon: Pokemon) -> some View {
         if pokemon.id == currentId {
@@ -55,7 +53,7 @@ private extension EvolutionView {
             }
         }
     }
-    
+
     func ovalCard(for pokemon: Pokemon) -> some View {
         OvalCard(
             titleName: pokemon.name,
@@ -64,14 +62,14 @@ private extension EvolutionView {
             bgColor: bgColor
         )
     }
-    
+
     var titleSection: some View {
         Text("Evolution")
             .font(.system(.title2, weight: .bold))
             .padding(.vertical)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
-    
+
     var arrowLevel: some View {
         HStack {
             Spacer()

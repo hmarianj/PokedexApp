@@ -55,7 +55,6 @@ struct DetailsView: View {
 }
 
 private extension DetailsView {
-    
     var backgroundImage: some View {
         ZStack {
             AsyncImage(url: URL(string: imageUrl)) { image in
@@ -93,28 +92,27 @@ private extension DetailsView {
                         }
                 }
             }
-            
         }
     }
-    
+
     var titleSection: some View {
         Text(title.capitalized)
             .font(.system(.largeTitle, weight: .bold))
             .multilineTextAlignment(.center)
     }
-    
+
     var numberIDSection: some View {
         Text("Nº\(String(format: "%03d", id))")
             .font(.headline)
             .foregroundStyle(.gray)
     }
-    
+
     var descriptionSection: some View {
         Text(viewModel.pokemonDescription)
             .font(.title3)
             .foregroundStyle(.black.opacity(0.8))
     }
-    
+
     @ViewBuilder
     var tagViewSection: some View {
         if let pokemonDetails = viewModel.pokemonDetails {
@@ -130,10 +128,10 @@ private extension DetailsView {
             EmptyView()
         }
     }
-    
+
     var specificationSection: some View {
-            VStack(spacing: 24) {
-                if let pokemonDetails = viewModel.pokemonDetails {
+        VStack(spacing: 24) {
+            if let pokemonDetails = viewModel.pokemonDetails {
                 Text("Characteristics")
                     .font(.system(.title2, weight: .bold))
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -142,7 +140,7 @@ private extension DetailsView {
                     SpecificationCard(
                         imageName: "weigth-icon",
                         title: "Weigth",
-                        value:  formatValue(pokemonDetails.weight),
+                        value: formatValue(pokemonDetails.weight),
                         metric: "kg"
                     )
                     SpecificationCard(
@@ -155,7 +153,7 @@ private extension DetailsView {
             }
         }
     }
-    
+
     @ViewBuilder
     var evolutionSection: some View {
         if viewModel.isLoading {
@@ -168,13 +166,13 @@ private extension DetailsView {
             )
         }
     }
-    
+
     var isCaptured: Bool {
-        return myPokemons.contains(where: { item in
+        myPokemons.contains(where: { item in
             item.id == self.id
         })
     }
-    
+
     func toggleCaptured() {
         if isCaptured {
             myPokemons.removeAll { item in
@@ -184,12 +182,11 @@ private extension DetailsView {
             myPokemons.append(.init(name: title, url: "https://pokeapi.co/api/v2/pokemon/\(id)"))
         }
     }
-    
+
     func formatValue(_ value: Int) -> String {
         let formattedValue = Double(value) / 10.0
         return String(format: "%.1f", formattedValue)
     }
-    
 }
 
 #Preview {

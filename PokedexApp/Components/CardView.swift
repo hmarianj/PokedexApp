@@ -1,5 +1,5 @@
 //
-//  ListView.swift
+//  CardView.swift
 //  PokedexApp
 //
 //  Created by MH on 07/01/2025.
@@ -9,13 +9,12 @@ import SwiftUI
 import UIImageColors
 
 struct CardView: View {
-    
     @State private var backgroundColor: Color = Color.cyan.opacity(0.4)
     private static var colorCache = NSCache<NSString, UIColor>()
     let imageUrl: String
     let name: String
     let id: Int
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
@@ -24,7 +23,7 @@ struct CardView: View {
                 Spacer() // TODO: check this in preview
             }
         }
-        .frame(maxWidth: .infinity, minHeight: 90 ,alignment: .leading)
+        .frame(maxWidth: .infinity, minHeight: 90, alignment: .leading)
         .padding()
         .background {
             cardImageBackground
@@ -42,7 +41,7 @@ private extension CardView {
             .multilineTextAlignment(.leading)
             .shadow(radius: 2)
     }
-    
+
     var numberIDSection: some View {
         Text("Nº\(String(format: "%03d", id))")
             .font(.system(.caption2, weight: .semibold))
@@ -52,14 +51,14 @@ private extension CardView {
             .background(.white)
             .cornerRadius(16)
     }
-    
+
     var pokeballImageBackground: some View {
         Image("pokeball-bg")
             .resizable()
             .frame(width: 140, height: 140)
             .offset(x: 30)
     }
-    
+
     var cardImageBackground: some View {
         HStack {
             Spacer()
@@ -73,7 +72,6 @@ private extension CardView {
                         .scaleEffect(x: 1.5, y: 1.5)
                         .task {
                             extractColors(from: image.asUIImage())
-                            
                         }
                 } placeholder: {
                     ProgressView()
@@ -83,20 +81,20 @@ private extension CardView {
         }
         .background(backgroundColor)
     }
-    
+
     private func extractColors(from image: UIImage) {
         let cacheKey = imageUrl as NSString
-        
+
         if let cachedColor = Self.colorCache.object(forKey: cacheKey) {
             backgroundColor = Color(cachedColor)
             return
         }
-        
+
         DispatchQueue.global(qos: .userInitiated).async { [cacheKeyString = cacheKey as String] in
             if let colors = image.getColors() {
                 if let primaryColor = colors.background {
                     Self.colorCache.setObject(primaryColor, forKey: cacheKeyString as NSString)
-                    
+
                     DispatchQueue.main.async {
                         withAnimation {
                             backgroundColor = Color(primaryColor)
@@ -107,7 +105,6 @@ private extension CardView {
         }
     }
 }
-
 
 #Preview {
     HStack {

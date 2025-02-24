@@ -1,5 +1,5 @@
 //
-//  Evolution.swift
+//  EvolutionModel.swift
 //  PokedexApp
 //
 //  Created by MH on 03/02/2025.
@@ -7,12 +7,12 @@
 
 struct Evolution: Codable {
     let chain: Chain
-    
+
     struct Chain: Codable {
         let species: Pokemon
         let evolvesTo: [EvolvesTo]
     }
-    
+
     struct EvolvesTo: Codable {
         let evolvesTo: [EvolvesTo]
         let species: Pokemon
@@ -21,7 +21,7 @@ struct Evolution: Codable {
 
 extension Evolution {
     var pokemons: [Pokemon] {
-        return chain.allEvolvedPokemons()
+        chain.allEvolvedPokemons()
     }
 }
 

@@ -8,9 +8,8 @@ import Foundation
 import SwiftUI
 
 struct MyPokemons: View {
-    
     @AppStorage(AppStorageKeys.myPokemons.rawValue) var myPokemons: [Pokemon] = []
-    
+
     private let adaptiveColumn = [
         GridItem(.adaptive(minimum: 150))
     ]
@@ -22,7 +21,7 @@ struct MyPokemons: View {
             pokemonsCaught
         }
     }
-    
+
     var pokemonsCaught: some View {
         NavigationStack {
             ScrollView {
@@ -48,8 +47,8 @@ struct MyPokemons: View {
             }
             .scrollIndicators(.hidden)
         }
-        
     }
+
     var emptyView: some View {
         VStack(spacing: 16) {
             Spacer()
