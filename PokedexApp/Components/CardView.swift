@@ -20,7 +20,6 @@ struct CardView: View {
             VStack(alignment: .leading) {
                 titleSection
                 numberIDSection
-                Spacer() // TODO: check this in preview
             }
         }
         .frame(maxWidth: .infinity, minHeight: 90, alignment: .leading)

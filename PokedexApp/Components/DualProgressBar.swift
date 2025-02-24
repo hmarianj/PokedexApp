@@ -15,10 +15,10 @@ struct DualProgressBar: View {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     Rectangle()
-                        .fill(Color.blue) // TODO: parametrizar
+                        .fill(Color.blue)
                         .frame(width: geometry.size.width * fraction, height: 20)
                     Rectangle()
-                        .fill(Color.pink) // TODO: parametrizar
+                        .fill(Color.pink)
                         .frame(width: geometry.size.width * (1 - fraction), height: 20)
                         .offset(x: geometry.size.width * fraction)
                 }

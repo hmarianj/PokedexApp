@@ -27,7 +27,6 @@ extension Evolution {
 
 extension Evolution.Chain {
     func allEvolvedPokemons() -> [Pokemon] {
-        // TODO: Si tiene species, agregarlo
         var result: [Pokemon] = []
         result.append(species)
         for evolution in evolvesTo {
