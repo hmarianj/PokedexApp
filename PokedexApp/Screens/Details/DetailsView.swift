@@ -5,6 +5,7 @@
 //  Created by MH on 06/01/2025.
 //
 
+import Combine
 import SwiftUI
 
 struct DetailsView: View {
@@ -14,8 +15,7 @@ struct DetailsView: View {
     @StateObject var viewModel: ViewModel = ViewModel()
     @State var circleBackgroundColor: Color = .gray
     @AppStorage(AppStorageKeys.myPokemons.rawValue) var myPokemons: [Pokemon] = []
-    
-    
+
     var body: some View {
         ScrollView {
             backgroundImage
@@ -35,6 +35,15 @@ struct DetailsView: View {
             }
             .offset(y: -80)
             .padding()
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                PokeballButton(isCaptured: isCaptured) {
+                    withAnimation {
+                        toggleCaptured()
+                    }
+                }
+            }
         }
         .scrollIndicators(.hidden)
         .ignoresSafeArea()
@@ -57,12 +66,6 @@ private extension DetailsView {
                 ProgressView()
             }
             .frame(width: 180, height: 180)
-            PokeballButton(isCaptured: isCaptured) {
-                withAnimation {
-                    toggleCaptured()
-                }
-            }
-            .offset(x: 150, y: -70)
         }
         .frame(maxWidth: .infinity, minHeight: 330)
         .background {

@@ -9,7 +9,16 @@ import Foundation
 
 struct ServiceMocks: PokemonServiceProtocol {
     
+    var shouldFail: Bool = false
+    
+    init(shouldFail: Bool) {
+        self.shouldFail = shouldFail
+    }
+    
     func getPokemonSpeciesData(id: Int) async throws -> PokemonSpecies {
+        if shouldFail {
+            throw NSError(domain: "", code: 1)
+        }
         return PokemonSpecies(
             evolutionChain: .init(url: ""),
             genderRate: 2,
