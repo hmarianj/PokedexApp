@@ -19,7 +19,7 @@ struct PokeballButton: View {
         } label: {
             Image(isCaptured ? "pokeball-close" : "pokeball-open")
                 .resizable()
-                .frame(width: 48, height: 48)            
+                .frame(width: 48, height: 48)
         }
     }
 }

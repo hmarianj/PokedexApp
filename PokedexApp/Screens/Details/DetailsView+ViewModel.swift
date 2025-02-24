@@ -18,11 +18,10 @@ extension DetailsView {
         @Published var pokemonDetails: PokemonDetails? = nil
         @Published var evolutionPokemons: [Pokemon] = []
         @Published var weaknesses: [String] = []
+        private let pokemonService: PokemonServiceProtocol
         
-        init() {
-            let jsonDecoder = JSONDecoder()
-            jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-            HTTPClient.shared.jsonDecoder = jsonDecoder
+        init(pokemonService: PokemonServiceProtocol = PokemonService()) {
+            self.pokemonService = pokemonService
         }
                 
         var maleFraction: CGFloat {
@@ -31,9 +30,9 @@ extension DetailsView {
         }
         
         var pokemonDescription: String {
-            guard let entries = pokemonSpecies?.flavorTextEntries else { return "Descripción no disponible" }
+            guard let entries = pokemonSpecies?.flavorTextEntries else { return "Description not available" }
             
-            let rawText = entries.first(where: { $0.language.name == "en" })?.flavorText.replacingOccurrences(of: "\n", with: " ") ?? "Descripción no disponible"
+            let rawText = entries.first(where: { $0.language.name == "en" })?.flavorText.replacingOccurrences(of: "\n", with: " ") ?? "Description not available"
             
             return rawText
                 .replacingOccurrences(of: "POKéMON", with: "Pokémon")
@@ -43,13 +42,7 @@ extension DetailsView {
         func loadPokemonSpeciesData(id: Int) async {
             isLoading = true
             do {
-                let response = try await HTTPClient.shared.execute(
-                    Request(
-                        urlString: "https://pokeapi.co/api/v2/pokemon-species/\(id)",
-                        method: .get([])
-                    ),
-                    responseType: PokemonSpecies.self
-                )
+                let response = try await pokemonService.getPokemonSpeciesData(id: id)
                 self.pokemonSpecies = response
                 await loadEvolutions(url: response.evolutionChain.url)
             } catch {
@@ -61,13 +54,7 @@ extension DetailsView {
         func loadPokemonDetails(id: Int) async {
             isLoading = true
             do {
-                let response = try await HTTPClient.shared.execute(
-                    Request(
-                        urlString: "https://pokeapi.co/api/v2/pokemon/\(id)",
-                        method: .get([])
-                    ),
-                    responseType: PokemonDetails.self
-                )
+                let response = try await pokemonService.getPokemonDetailsData(id: id)
                 self.pokemonDetails = response
                 await loadWeaknesses(types: response.types)
                 
@@ -81,15 +68,9 @@ extension DetailsView {
             isLoading = true
             // Call evolution api
             do {
-                let response = try await HTTPClient.shared.execute(
-                    Request(
-                        urlString: url,
-                        method: .get([])
-                    ),
-                    responseType: Evolution.self
-                )
+                let response = try await pokemonService.getPokemonsEvolutionData(url: url)
                 isLoading = false
-                self.evolutionPokemons = response.pokemons
+                self.evolutionPokemons = response
             } catch {
                 isLoading = false
                 // TODO: Error
@@ -103,17 +84,9 @@ extension DetailsView {
             
             for type in types {
                 let typeName = type.type.name
-                let typeURL = "https://pokeapi.co/api/v2/type/\(typeName)/"
-                
+
                 do {
-                    let response = try await HTTPClient.shared.execute(
-                        Request(
-                            urlString: typeURL,
-                            method: .get([])
-                        ),
-                        responseType: TypeAPIResponse.self
-                    )
-                    
+                    let response = try await pokemonService.getTypeWeaknesses(for: typeName)
                     let weaknesses = response.damageRelations.doubleDamageFrom.map { $0.name }
                     let resistances = response.damageRelations.halfDamageFrom.map { $0.name }
                     allWeaknesses.formUnion(weaknesses)

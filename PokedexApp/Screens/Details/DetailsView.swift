@@ -5,7 +5,6 @@
 //  Created by MH on 06/01/2025.
 //
 
-import CoreNetworking
 import SwiftUI
 
 struct DetailsView: View {
