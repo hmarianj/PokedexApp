@@ -8,10 +8,7 @@
 import SwiftUI
 
 struct SpecificationCard: View {
-    var imageName: String
-    var title: String
-    var value: String
-    var metric: String
+    var model: SpecificationCard.Model
 
     var body: some View {
         VStack {
@@ -21,21 +18,30 @@ struct SpecificationCard: View {
     }
 }
 
+extension SpecificationCard {
+    struct Model {
+        var imageName: String
+        var title: String
+        var value: String
+        var metric: String
+    }
+}
+
 private extension SpecificationCard {
     var categorySection: some View {
         HStack {
-            Image(imageName)
+            Image(model.imageName)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 16, height: 16)
-            Text(title)
+            Text(model.title)
                 .font(.subheadline)
                 .foregroundStyle(.gray)
         }
     }
 
     var descriptionSection: some View {
-        Text(value + metric)
+        Text(model.value + model.metric)
             .font(.system(.title3, weight: .semibold))
             .padding()
             .frame(maxWidth: .infinity)
@@ -48,9 +54,11 @@ private extension SpecificationCard {
 
 #Preview {
     SpecificationCard(
-        imageName: "weigth-icon",
-        title: "Weigth",
-        value: "14,5 ",
-        metric: "kg"
+        model: .init(
+            imageName: "weigth-icon",
+            title: "Weigth",
+            value: "14,5",
+            metric: "kg"
+        )
     )
 }

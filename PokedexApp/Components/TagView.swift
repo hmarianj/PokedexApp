@@ -15,7 +15,7 @@ struct TagView: View {
 
     var body: some View {
         HStack {
-            Image(content.iconType?.iconType ?? "")
+            Image(content.iconType?.iconAssetName ?? "")
                 .resizable()
                 .scaledToFit()
                 .frame(width: style.width, height: style.height)
@@ -37,14 +37,6 @@ struct TagView: View {
 }
 
 extension TagView {
-    private func loadBackgroundColor() {
-        if let iconType = content.iconType {
-            iconType.getColor { color in
-                backgroundColor = color
-            }
-        }
-    }
-
     struct Content {
         let type: String
         var iconType: IconType? {
@@ -77,6 +69,16 @@ extension TagView {
             horizontalPadding: 10,
             verticalPadding: 6
         )
+    }
+}
+
+private extension TagView {
+    func loadBackgroundColor() {
+        if let iconType = content.iconType {
+            iconType.getColor { color in
+                backgroundColor = color
+            }
+        }
     }
 }
 

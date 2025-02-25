@@ -11,9 +11,7 @@ import UIImageColors
 struct CardView: View {
     @State private var backgroundColor: Color = Color.cyan.opacity(0.4)
     private static var colorCache = NSCache<NSString, UIColor>()
-    let imageUrl: String
-    let name: String
-    let id: Int
+    var model: CardView.Model
 
     var body: some View {
         HStack {
@@ -32,9 +30,17 @@ struct CardView: View {
     }
 }
 
+extension CardView {
+    struct Model {
+        let imageUrl: String
+        let name: String
+        let id: Int
+    }
+}
+
 private extension CardView {
     var titleSection: some View {
-        Text(name.capitalized)
+        Text(model.name.capitalized)
             .font(.system(.title2, weight: .bold))
             .foregroundStyle(.white)
             .multilineTextAlignment(.leading)
@@ -42,7 +48,7 @@ private extension CardView {
     }
 
     var numberIDSection: some View {
-        Text("Nº\(String(format: "%03d", id))")
+        Text("Nº\(String(format: "%03d", model.id))")
             .font(.system(.caption2, weight: .semibold))
             .foregroundStyle(.gray)
             .padding(.horizontal, 12)
@@ -63,7 +69,7 @@ private extension CardView {
             Spacer()
             ZStack(alignment: .trailingFirstTextBaseline) {
                 pokeballImageBackground
-                AsyncImage(url: URL(string: imageUrl)) { image in
+                AsyncImage(url: URL(string: model.imageUrl)) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -81,8 +87,8 @@ private extension CardView {
         .background(backgroundColor)
     }
 
-    private func extractColors(from image: UIImage) {
-        let cacheKey = imageUrl as NSString
+    func extractColors(from image: UIImage) {
+        let cacheKey = model.imageUrl as NSString
 
         if let cachedColor = Self.colorCache.object(forKey: cacheKey) {
             backgroundColor = Color(cachedColor)
@@ -108,15 +114,19 @@ private extension CardView {
 #Preview {
     HStack {
         CardView(
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png",
-            name: "Pokemon",
-            id: 007
+            model: .init(
+                imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png",
+                name: "Pokemon",
+                id: 007
+            )
         )
         .fixedSize(horizontal: false, vertical: true)
         CardView(
-            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/8.png",
-            name: "Pokemon",
-            id: 008
+            model: .init(
+                imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/8.png",
+                name: "Pokemon",
+                id: 008
+            )
         )
         .fixedSize(horizontal: false, vertical: true)
     }

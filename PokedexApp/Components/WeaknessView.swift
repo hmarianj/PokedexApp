@@ -35,5 +35,7 @@ private extension WeaknessView {
 }
 
 #Preview {
-    WeaknessView(weaknesses: ["fire", "ice", "poison", "flying", "bug", "ground", "psychic"])
+    WeaknessView(
+        weaknesses: ["fire", "ice", "poison", "flying", "bug", "ground", "psychic"]
+    )
 }

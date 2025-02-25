@@ -1,5 +1,5 @@
 //
-//  View.swift
+//  View+UIImage.swift
 //  PokedexApp
 //
 //  Created by MH on 24/02/2025.

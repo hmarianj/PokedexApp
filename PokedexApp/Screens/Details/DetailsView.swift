@@ -9,12 +9,10 @@ import Combine
 import SwiftUI
 
 struct DetailsView: View {
-    let id: Int
-    let title: String
-    let imageUrl: String
     @StateObject var viewModel: ViewModel = ViewModel()
     @State var circleBackgroundColor: Color = .gray
     @AppStorage(AppStorageKeys.myPokemons.rawValue) var myPokemons: [Pokemon] = []
+    var model: DetailsView.Model
 
     var body: some View {
         ScrollView {
@@ -48,16 +46,24 @@ struct DetailsView: View {
         .scrollIndicators(.hidden)
         .ignoresSafeArea()
         .task {
-            await viewModel.loadPokemonSpeciesData(id: id)
-            await viewModel.loadPokemonDetails(id: id)
+            await viewModel.loadPokemonSpeciesData(id: model.id)
+            await viewModel.loadPokemonDetails(id: model.id)
         }
+    }
+}
+
+extension DetailsView {
+    struct Model {
+        let id: Int
+        let title: String
+        let imageUrl: String
     }
 }
 
 private extension DetailsView {
     var backgroundImage: some View {
         ZStack {
-            AsyncImage(url: URL(string: imageUrl)) { image in
+            AsyncImage(url: URL(string: model.imageUrl)) { image in
                 image
                     .resizable()
                     .scaledToFill()
@@ -76,7 +82,7 @@ private extension DetailsView {
                     .clipped()
                 if let firstTypeName = viewModel.pokemonDetails?.types.first?.type.name,
                    let iconType = IconType(rawValue: firstTypeName) {
-                    Image(iconType.iconType)
+                    Image(iconType.iconAssetName)
                         .resizable()
                         .renderingMode(.template)
                         .scaledToFit()
@@ -96,13 +102,13 @@ private extension DetailsView {
     }
 
     var titleSection: some View {
-        Text(title.capitalized)
+        Text(model.title.capitalized)
             .font(.system(.largeTitle, weight: .bold))
             .multilineTextAlignment(.center)
     }
 
     var numberIDSection: some View {
-        Text("Nº\(String(format: "%03d", id))")
+        Text("Nº\(String(format: "%03d", model.id))")
             .font(.headline)
             .foregroundStyle(.gray)
     }
@@ -138,16 +144,20 @@ private extension DetailsView {
                     .padding(.vertical, 6)
                 HStack(spacing: 20) {
                     SpecificationCard(
-                        imageName: "weigth-icon",
-                        title: "Weigth",
-                        value: formatValue(pokemonDetails.weight),
-                        metric: "kg"
+                        model: .init(
+                            imageName: "weight-icon",
+                            title: "Weight",
+                            value: formatValue(pokemonDetails.weight),
+                            metric: "kg"
+                        )
                     )
                     SpecificationCard(
-                        imageName: "heigth-icon",
-                        title: "Heigth",
-                        value: formatValue(pokemonDetails.height),
-                        metric: "m"
+                        model: .init(
+                            imageName: "height-icon",
+                            title: "Height",
+                            value: formatValue(pokemonDetails.height),
+                            metric: "m"
+                        )
                     )
                 }
             }
@@ -160,26 +170,28 @@ private extension DetailsView {
             ProgressView()
         } else if !viewModel.evolutionPokemons.isEmpty {
             EvolutionView(
-                currentId: id,
-                pokemons: viewModel.evolutionPokemons,
-                bgColor: circleBackgroundColor
+                model: .init(
+                    currentId: model.id,
+                    pokemons: viewModel.evolutionPokemons,
+                    bgColor: circleBackgroundColor
+                )
             )
         }
     }
 
     var isCaptured: Bool {
         myPokemons.contains(where: { item in
-            item.id == self.id
+            item.id == self.model.id
         })
     }
 
     func toggleCaptured() {
         if isCaptured {
             myPokemons.removeAll { item in
-                item.id == self.id
+                item.id == self.model.id
             }
         } else {
-            myPokemons.append(.init(name: title, url: "https://pokeapi.co/api/v2/pokemon/\(id)"))
+            myPokemons.append(.init(name: model.title, url: "https://pokeapi.co/api/v2/pokemon/\(model.id)"))
         }
     }
 
@@ -191,8 +203,10 @@ private extension DetailsView {
 
 #Preview {
     DetailsView(
-        id: 1,
-        title: "Squirtle",
-        imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png"
+        model: .init(
+            id: 1,
+            title: "Squirtle",
+            imageUrl: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png"
+        )
     )
 }

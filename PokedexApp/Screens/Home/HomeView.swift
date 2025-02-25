@@ -59,15 +59,19 @@ private extension HomeView {
                     ForEach(filteredPokemons, id: \.name) { item in
                         NavigationLink(
                             destination: DetailsView(
-                                id: item.id,
-                                title: item.name,
-                                imageUrl: item.imageUrl
+                                model: .init(
+                                    id: item.id,
+                                    title: item.name,
+                                    imageUrl: item.imageUrl
+                                )
                             )
                         ) {
                             CardView(
-                                imageUrl: item.imageUrl,
-                                name: item.name,
-                                id: item.id
+                                model: .init(
+                                    imageUrl: item.imageUrl,
+                                    name: item.name,
+                                    id: item.id
+                                )
                             )
                         }
                     }
