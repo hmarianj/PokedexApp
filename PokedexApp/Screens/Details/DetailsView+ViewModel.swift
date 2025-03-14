@@ -16,7 +16,8 @@ extension DetailsView {
         @Published var displayError: Bool = false
         @Published var pokemonSpecies: PokemonSpecies? = nil
         @Published var pokemonDetails: PokemonDetails? = nil
-        @Published var evolutionPokemons: [Pokemon] = []
+        @Published var evolutionPokemons: [EvolutionUIModel] = []
+
         @Published var weaknesses: [String] = []
         private let pokemonService: PokemonServiceProtocol
 

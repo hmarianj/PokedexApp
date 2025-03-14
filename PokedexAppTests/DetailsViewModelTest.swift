@@ -76,12 +76,12 @@ final class DetailsViewModelTest: XCTestCase {
 
     func testLoadEvolutions() async throws {
         // Given
-        let expectedEvolution = "charmander"
+        let expectedEvolution = "Metapod"
 
         // When
         await sut.loadPokemonSpeciesData(id: 4)
 
         // Then
-        XCTAssertEqual(sut.evolutionPokemons.first?.name, expectedEvolution)
+        XCTAssertEqual(sut.evolutionPokemons.first?.pokemon.name, expectedEvolution)
     }
 }

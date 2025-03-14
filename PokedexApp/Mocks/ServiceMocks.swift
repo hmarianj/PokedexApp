@@ -33,8 +33,15 @@ struct ServiceMocks: PokemonServiceProtocol {
         )
     }
 
-    func getPokemonsEvolutionData(url _: String) async throws -> [Pokemon] {
-        [Pokemon(name: "charmander", url: "https://pokeapi.co/api/v2/pokemon/4/")]
+    func getPokemonsEvolutionData(url _: String) async throws -> [EvolutionUIModel] {
+        [
+            .init(
+                pokemon: .init(name: "Metapod", url: "https://pokeapi.co/api/v2/pokemon-species/11/"),
+                evolvesTo: .init(name: "Butterfree", url: "https://pokeapi.co/api/v2/pokemon-species/12/"),
+                level: 10,
+                evolutionMethod: ""
+            )
+        ]
     }
 
     func getTypeWeaknesses(for typeName: String) async throws -> TypeAPIResponse {

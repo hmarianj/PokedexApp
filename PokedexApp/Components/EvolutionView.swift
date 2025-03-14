@@ -16,10 +16,12 @@ struct EvolutionView: View {
             VStack {
                 titleSection
                 VStack {
-                    ForEach(model.pokemons, id: \.id) { pokemon in
-                        card(for: pokemon)
-                        if model.pokemons.last?.id != pokemon.id {
-                            arrowLevel
+                    ForEach(model.pokemons.indices, id: \.self) { index in
+                        let evolution = model.pokemons[index]
+                        card(for: evolution.pokemon)
+
+                        if index < model.pokemons.count - 1 {
+                            arrowLevel(for: evolution.evolutionMethod)
                         }
                     }
                 }
@@ -37,7 +39,7 @@ struct EvolutionView: View {
 extension EvolutionView {
     struct Model {
         let currentId: Int
-        let pokemons: [Pokemon]
+        let pokemons: [EvolutionUIModel]
         let bgColor: Color
     }
 }
@@ -80,12 +82,14 @@ private extension EvolutionView {
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    var arrowLevel: some View {
+    func arrowLevel(for evolutionType: String?) -> some View {
         HStack {
             Spacer()
             Image(systemName: "arrowshape.down.fill")
                 .font(.title2)
                 .foregroundStyle(model.bgColor)
+
+            Text(evolutionType ?? "")
             Spacer()
         }
         .padding(12)
@@ -97,8 +101,24 @@ private extension EvolutionView {
         model: .init(
             currentId: 11,
             pokemons: [
-                .init(name: "Metapod", url: "https://pokeapi.co/api/v2/pokemon-species/11/"),
-                .init(name: "Butterfree", url: "https://pokeapi.co/api/v2/pokemon-species/12/")
+                .init(
+                    pokemon: .init(name: "Caterpee", url: "https://pokeapi.co/api/v2/pokemon-species/10/"),
+                    evolvesTo: .init(name: "Metapod", url: "https://pokeapi.co/api/v2/pokemon-species/11/"),
+                    level: 7,
+                    evolutionMethod: ""
+                ),
+                .init(
+                    pokemon: .init(name: "Metapod", url: "https://pokeapi.co/api/v2/pokemon-species/11/"),
+                    evolvesTo: .init(name: "Butterfree", url: "https://pokeapi.co/api/v2/pokemon-species/12/"),
+                    level: 10,
+                    evolutionMethod: ""
+                ),
+                .init(
+                    pokemon: .init(name: "Butterfree", url: "https://pokeapi.co/api/v2/pokemon-species/12/"),
+                    evolvesTo: nil,
+                    level: nil,
+                    evolutionMethod: ""
+                )
             ],
             bgColor: Color.bgBlue
         )
